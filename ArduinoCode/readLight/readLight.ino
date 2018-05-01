@@ -1,15 +1,15 @@
+// Code by CodyEthanJordan, part of an introductory lab activity
+// feel free to use, full details about lab activity at http://codyethanjordan.com/physics/fidgetSpinnerLab/
+// code hosted at https://github.com/CodyEthanJordan/FidgetSpinnerLab
 
 int lightPin = 0;
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(1000000);
-  
+  Serial.begin(74880); //NOTE: if you change the baud rate here, you will also need to change this value in the Python script to read code
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  // Serial.write(analogRead(lightPin));
   Serial.println(analogRead(0));
+  delayMicroseconds(10);
   
 }
