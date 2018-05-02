@@ -47,8 +47,8 @@ def collectData(filename, port, baudRate):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Reading in filename for data.')
     parser.add_argument('--port', action='store', dest='port')
-    #NOTE: this baud rate must match that which is set by the Arduino code and running on the board
     parser.add_argument('--baudRate', action='store', dest='baudRate', type=int, default=74880)
+    #NOTE: this baud rate must match that which is set by the Arduino code and running on the board
     parser.add_argument('filename', action="store")
     namespace = parser.parse_args()
     print('Writing data to ' + namespace.filename)
