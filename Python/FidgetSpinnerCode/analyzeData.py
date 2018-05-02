@@ -1,24 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.signal as signal
-import scipy as sy
-import scipy.fftpack as syft
 from collections import deque
 import scipy.optimize as opt
-# %% Read in data
+import argparse
 
 def analyzeData(filename):
-
-    inData = deque([])
-    with open("data4") as dataFile:
-        for d in dataFile:
-            try:
-                inData.append(int(d[2:5]))
-            except:
-                pass
-    data = np.array(inData)
-    plt.plot(data)
-    plt.show()
+    data = np.loadtxt(filename)
 
     # %% Find zero crossings
     crossings = []
@@ -53,7 +40,8 @@ def analyzeData(filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Reading in filename for data.')
-    parser.add_argument('filename', action="store")
+    parser.add_argument('filename', action="store",
+                        help='Name of file where data is stored')
     namespace = parser.parse_args()
 
     analyzeData(namespace.filename)

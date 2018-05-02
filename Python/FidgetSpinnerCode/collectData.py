@@ -1,3 +1,9 @@
+'''
+Code by Cody Ethan Jordan, script to collect data from Arduino for introductory lab about friction and data analysis
+Lab activities and details at http://codyethanjordan.com/physics/fidgetSpinnerLab/
+Code hosted at https://github.com/CodyEthanJordan/FidgetSpinnerLab
+'''
+
 import serial
 import time
 import msvcrt
@@ -11,7 +17,6 @@ defaultBaudrate = 74880
 #NOTE: this baud rate must match that which is set by the Arduino code and running on the board
 
 def collectData(filename, port, baudRate, livePlot):
-    
     # attempt automatic detection of connected arduino device
     if port == None:
         print('No port specified, attempting to locate port automatically')
