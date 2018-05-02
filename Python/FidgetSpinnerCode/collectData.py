@@ -1,10 +1,32 @@
 import serial
 import time
 import msvcrt
+import sys
 import argparse
+import serial.tools.list_ports
 from collections import deque
 
-def collectData(filename, port, baudRate): 
+def collectData(filename, port, baudRate):
+    
+    # attempt automatic detection of connected arduino device
+    if port == None:
+        print('No port specified, attempting to locate port automatically')
+        connectedDevices = list(serial.tools.list_ports.comports())
+        arduinosConnected = [portInfo for portInfo in connectedDevices 
+                             if 'Arduino' in portInfo[1] ] #TODO: improve detection scheme via regex and VID matching for offbrand Arduinos
+        if len(arduinosConnected) == 0:
+            print('Cannot automatically detect connected Arduino, check connections and specify port via --port option')
+            print('The following devices are connected')
+            for portInfo in connectedDevices:
+                print(portInfo[0] + '   ' + portInfo[1])
+            sys.exit(1)
+        elif len(arduinosConnected) > 1:
+            print('Multiple Arduinos connected, specify one via --port option')
+            sys.exit(1)
+        else:
+            port = arduinosConnected[0][0]
+            print('Arduino detected on ' + port)
+
     samples = deque([])
 
     done = False
