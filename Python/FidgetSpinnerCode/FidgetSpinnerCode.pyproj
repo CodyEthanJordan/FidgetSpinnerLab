@@ -12,7 +12,7 @@
     <Name>FidgetSpinnerCode</Name>
     <RootNamespace>FidgetSpinnerCode</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>data.txt</CommandLineArguments>
+    <CommandLineArguments>data.txt --livePlot</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

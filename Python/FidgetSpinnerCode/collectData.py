@@ -4,9 +4,13 @@ import msvcrt
 import sys
 import argparse
 import serial.tools.list_ports
+import matplotlib.pyplot as plt
 from collections import deque
 
-def collectData(filename, port, baudRate):
+defaultBaudrate = 74880
+#NOTE: this baud rate must match that which is set by the Arduino code and running on the board
+
+def collectData(filename, port, baudRate, livePlot):
     
     # attempt automatic detection of connected arduino device
     if port == None:
@@ -27,16 +31,38 @@ def collectData(filename, port, baudRate):
             port = arduinosConnected[0][0]
             print('Arduino detected on ' + port)
 
+
     samples = deque([])
 
     done = False
     with serial.Serial("COM4", baudRate) as ser:
         print('Starting data recording - press any key to end')
+
+        if livePlot:
+            plt.ion()
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            line1, = ax.plot([], 'r-') # Returns a tuple of line objects, thus the comma
+
         while not done:
             if msvcrt.kbhit():
                 done = True
             while ser.inWaiting() > 0:
-                samples.append(ser.readline())
+                input = ser.readline()
+                try:
+                    nextValue = int(input)
+                    samples.append(nextValue)
+                except ValueError:
+                    nextValue = None
+
+            if livePlot:
+                line1.set_xdata(range(len(samples)))
+                line1.set_ydata(samples)
+                ax.relim()
+                ax.autoscale_view()
+                fig.canvas.draw()
+                fig.canvas.flush_events()
+
 
     print("Done, writing to " + filename)
 
@@ -46,11 +72,15 @@ def collectData(filename, port, baudRate):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Reading in filename for data.')
-    parser.add_argument('--port', action='store', dest='port')
-    parser.add_argument('--baudRate', action='store', dest='baudRate', type=int, default=74880)
-    #NOTE: this baud rate must match that which is set by the Arduino code and running on the board
-    parser.add_argument('filename', action="store")
+    parser.add_argument('--port', action='store', dest='port',
+                        help='Specify what port to pull serial data from, if unset attempts to automatically locate an Arduino')
+    parser.add_argument('--baudRate', action='store', dest='baudRate', type=int, default=defaultBaudrate,
+                        help='Baud rate to read data at, set by Arduino script running on the board')
+    parser.add_argument('--livePlot', action="store_true", default=False,
+                        help='If set will plot data as it comes in')
+    parser.add_argument('filename', action="store",
+                        help='File to store data in')
     namespace = parser.parse_args()
     print('Writing data to ' + namespace.filename)
-    collectData(namespace.filename, namespace.port, namespace.baudRate)
+    collectData(namespace.filename, namespace.port, namespace.baudRate, namespace.livePlot)
 
