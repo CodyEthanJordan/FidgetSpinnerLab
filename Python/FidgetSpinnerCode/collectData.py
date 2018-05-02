@@ -36,7 +36,6 @@ def collectData(filename, port, baudRate, livePlot):
             port = arduinosConnected[0][0]
             print('Arduino detected on ' + port)
 
-
     samples = deque([])
 
     done = False
